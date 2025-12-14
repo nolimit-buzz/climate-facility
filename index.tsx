@@ -88,17 +88,12 @@ const Navbar = () => {
     >
       <div className="container mx-auto flex items-center justify-between">
         {/* Logo */}
-        <a href="#" className="flex items-center gap-3 group">
-          <div className="relative w-10 h-10">
-            <div className="absolute inset-0 bg-brand-accent rounded-full blur-sm opacity-50 group-hover:opacity-100 transition-opacity" />
-            <div className="relative w-full h-full bg-brand-accent rounded-full flex items-center justify-center text-brand-dark font-bold text-xl">
-              C
-            </div>
-          </div>
-          <div className="flex flex-col">
-            <span className="text-lg font-bold leading-none text-white tracking-wide font-sans">CLIMATE</span>
-            <span className="text-[10px] tracking-widest uppercase opacity-70 text-gray-300 font-sans">Finance Facility</span>
-          </div>
+        <a href="#" className="flex items-center group">
+          <img 
+            src="/logo.svg" 
+            alt="Climate Finance Blending Facility" 
+            className="h-12 w-auto transition-opacity group-hover:opacity-90"
+          />
         </a>
 
         {/* Desktop Nav */}
@@ -423,7 +418,14 @@ const Projects = () => {
       capital: "₦800m Private Capital",
       capacity: "526KW Capacity",
       date: "Sep 2022",
-      image: "https://images.unsplash.com/photo-1598330369865-f8d22744743c?q=80&w=800&auto=format&fit=crop"
+      image: "https://images.unsplash.com/photo-1723133371535-1412bc2e412e?q=80&w=1227&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    },
+    {
+      title: "Prado Power Energy",
+      capital: "₦1.95bn Private Capital",
+      capacity: "850kW Capacity",
+      date: "Oct 2024",
+      image: "https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=800&auto=format&fit=crop"
     },
     {
       title: "Hotspot Network",
@@ -432,13 +434,6 @@ const Projects = () => {
       date: "Jun 2023",
       image: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?q=80&w=800&auto=format&fit=crop"
     },
-    {
-      title: "Prado Power Energy",
-      capital: "₦1.95bn Private Capital",
-      capacity: "850kW Capacity",
-      date: "Oct 2024",
-      image: "https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=800&auto=format&fit=crop"
-    }
   ];
 
   return (
@@ -594,7 +589,7 @@ const HowWeDriveImpact = () => {
                   suffix="" 
                   label="Jobs Created" 
                   delay={0.4}
-                  image="https://images.unsplash.com/photo-1581094741807-687463060c71?q=80&w=800&auto=format&fit=crop"
+                  image="https://images.unsplash.com/photo-1707064892275-a3088e8240be?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 />
                 <ImpactVisualCard 
                   icon={Leaf} 
@@ -830,7 +825,7 @@ const MapSection = () => (
 
 const FeaturedStories = () => {
   const storyImages = [
-    "https://images.unsplash.com/photo-1596525164287-987819777f98?q=80&w=800&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1761047647087-701689b118c3?q=80&w=1276&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     "https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=800&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1532601224476-15c79f2f7a51?q=80&w=800&auto=format&fit=crop"
   ];
@@ -882,13 +877,13 @@ const LatestNews = () => {
       tag: "Transaction",
       date: "15 Sep 2024",
       title: "Reaching 1 Million lives: Facility closes deal for 10MW off-grid solar expansion in Kano State",
-      image: "https://images.unsplash.com/photo-1592838035216-7a43f713e170?q=80&w=800&auto=format&fit=crop"
+      image: "https://images.unsplash.com/photo-1721137532012-ff8615f1ee8f?q=80&w=2274&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     },
     {
       tag: "Milestone",
       date: "02 Aug 2024",
       title: "FCDO commits additional £5M funding to accelerate clean energy access across West Africa",
-      image: "https://images.unsplash.com/photo-1664575602276-acd905929340?q=80&w=800&auto=format&fit=crop"
+      image: "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?q=80&w=2671&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     }
   ];
 
@@ -955,12 +950,12 @@ const Footer = () => (
     <div className="container mx-auto">
       <div className="grid lg:grid-cols-4 gap-12 mb-20">
         <div className="flex flex-col items-center lg:items-start lg:col-span-1">
-          <a href="#" className="flex items-center gap-3 mb-8">
-            <div className="w-12 h-12 bg-brand-accent rounded-full flex items-center justify-center text-brand-dark font-bold text-2xl">C</div>
-            <div className="flex flex-col">
-              <span className="text-xl font-bold leading-none font-sans">CLIMATE</span>
-              <span className="text-xs tracking-wider uppercase opacity-70 font-sans">Finance Facility</span>
-            </div>
+          <a href="#" className="flex items-center mb-8">
+            <img 
+              src="/logo.svg" 
+              alt="Climate Finance Blending Facility" 
+              className="h-12 w-auto"
+            />
           </a>
         </div>
 
