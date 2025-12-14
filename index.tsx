@@ -751,6 +751,326 @@ const HowWeDriveImpact = () => {
   );
 };
 
+// Error Boundary Component (simplified)
+const MapErrorBoundary = ({ children }: { children: React.ReactNode }) => {
+  return <>{children}</>;
+};
+
+const NigeriaMap = () => {
+  const [geoData, setGeoData] = useState(null);
+  const [stateData, setStateData] = useState(null);
+  const [paths, setPaths] = useState([]);
+  const [statePaths, setStatePaths] = useState([]);
+  const [locations, setLocations] = useState([]);
+  const [d3Geo, setD3Geo] = useState(null);
+  const [error, setError] = useState(null);
+  const [isReady, setIsReady] = useState(false);
+  const projectionRef = useRef(null);
+  const svgRef = useRef(null);
+
+  useEffect(() => {
+    // Dynamically load d3-geo
+    import('d3-geo')
+      .then(module => {
+        try {
+          // Handle different export formats
+          const d3GeoModule = module.default || module;
+          const geoMercatorFn = d3GeoModule.geoMercator || module.geoMercator;
+          const geoPathFn = d3GeoModule.geoPath || module.geoPath;
+          const geoContainsFn = d3GeoModule.geoContains || module.geoContains;
+          
+          if (!geoMercatorFn || !geoPathFn) {
+            console.error('d3-geo functions not found in module');
+            setError('d3-geo functions not available');
+            return;
+          }
+          
+          setD3Geo({
+            geoMercator: geoMercatorFn,
+            geoPath: geoPathFn,
+            geoContains: geoContainsFn
+          });
+        } catch (err) {
+          console.error('Error processing d3-geo module:', err);
+          setError('Failed to load d3-geo');
+        }
+      })
+      .catch(err => {
+        console.error('Error loading d3-geo:', err);
+        setError('Failed to load d3-geo library');
+      });
+  }, []);
+
+  useEffect(() => {
+    if (!d3Geo || !d3Geo.geoMercator || !d3Geo.geoPath) return;
+
+    // Load GeoJSON data
+    fetch('/ng.json')
+      .then(res => res.json())
+      .then(data => {
+        if (!data || !data.features || !Array.isArray(data.features)) {
+          console.error('Invalid GeoJSON data');
+          return;
+        }
+        
+        try {
+          setGeoData(data);
+          
+          // Create projection centered on Nigeria
+          const width = 600;
+          const height = 500;
+          const proj = d3Geo.geoMercator()
+            .center([8, 9]) // Nigeria center coordinates
+            .scale(2800)
+            .translate([width / 2, height / 2]);
+          
+          // Test the projection before setting it
+          try {
+            const testPoint = proj([8, 9]);
+            if (!testPoint || testPoint.length < 2 || !isFinite(testPoint[0]) || !isFinite(testPoint[1])) {
+              throw new Error('Projection test failed');
+            }
+          } catch (testErr) {
+            console.error('Projection test failed:', testErr);
+            return;
+          }
+          
+          // Store projection in ref instead of state to avoid re-render issues
+          projectionRef.current = proj;
+          
+          // Generate paths with error handling
+          const pathGenerator = d3Geo.geoPath().projection(proj);
+          const pathStrings = data.features
+            .map(feature => {
+              try {
+                if (!feature || !feature.geometry) return null;
+                // Validate geometry coordinates before processing
+                if (feature.geometry.type === 'MultiPolygon' || feature.geometry.type === 'Polygon') {
+                  const coords = feature.geometry.coordinates;
+                  if (!coords || !Array.isArray(coords)) return null;
+                }
+                const d = pathGenerator(feature);
+                return d ? { d, id: feature.id } : null;
+              } catch (err) {
+                console.warn('Error generating path for feature:', err);
+                return null;
+              }
+            })
+            .filter(Boolean);
+          setPaths(pathStrings);
+          
+          // Generate 35 locations inside Nigeria using the GeoJSON polygon
+          const generateLocationsInsideNigeria = (geoData, proj) => {
+            const allCoords = [];
+            
+            // Extract all coordinates to calculate bounds
+            geoData.features.forEach(feature => {
+              if (feature.geometry && feature.geometry.coordinates) {
+                feature.geometry.coordinates.forEach(polygon => {
+                  polygon.forEach(ring => {
+                    ring.forEach(coord => {
+                      if (Array.isArray(coord) && coord.length >= 2) {
+                        allCoords.push([coord[0], coord[1]]);
+                      }
+                    });
+                  });
+                });
+              }
+            });
+            
+            if (allCoords.length === 0) return [];
+            
+            // Calculate bounding box
+            const lons = allCoords.map(c => c[0]);
+            const lats = allCoords.map(c => c[1]);
+            const minLon = Math.min(...lons);
+            const maxLon = Math.max(...lons);
+            const minLat = Math.min(...lats);
+            const maxLat = Math.max(...lats);
+            
+            const sampleCount = 35;
+            const sampled = [];
+            let attempts = 0;
+            const maxAttempts = sampleCount * 100;
+            
+            // Generate random points and check if they're inside Nigeria
+            while (sampled.length < sampleCount && attempts < maxAttempts) {
+              attempts++;
+              
+              const lon = minLon + Math.random() * (maxLon - minLon);
+              const lat = minLat + Math.random() * (maxLat - minLat);
+              
+              // Check if point is inside using d3-geo
+              let isInside = false;
+              for (const feature of geoData.features) {
+                if (feature.geometry && d3Geo.geoContains) {
+                  try {
+                    if (d3Geo.geoContains(feature, [lon, lat])) {
+                      isInside = true;
+                      break;
+                    }
+                  } catch (e) {
+                    // Skip if error
+                  }
+                }
+              }
+              
+              if (isInside) {
+                sampled.push({ lon, lat });
+              }
+            }
+            
+            // If we didn't get enough, use a grid approach with center points
+            if (sampled.length < sampleCount) {
+              const remaining = sampleCount - sampled.length;
+              const gridSize = Math.ceil(Math.sqrt(remaining * 3));
+              const lonStep = (maxLon - minLon) / (gridSize + 1);
+              const latStep = (maxLat - minLat) / (gridSize + 1);
+              
+              for (let i = 1; i <= gridSize && sampled.length < sampleCount; i++) {
+                for (let j = 1; j <= gridSize && sampled.length < sampleCount; j++) {
+                  const lon = minLon + (i * lonStep);
+                  const lat = minLat + (j * latStep);
+                  
+                  // Quick check - assume center area is likely inside
+                  if (sampled.length < sampleCount) {
+                    sampled.push({ lon, lat });
+                  }
+                }
+              }
+            }
+            
+            return sampled.slice(0, sampleCount);
+          };
+          
+          const generatedLocations = generateLocationsInsideNigeria(data, proj);
+          setLocations(generatedLocations);
+          
+          // Try to load state boundaries from local file first, then try public source
+          Promise.race([
+            fetch('/ng-states.json').then(res => res.ok ? res.json() : null),
+            fetch('https://raw.githubusercontent.com/temikeezy/nigeria-geojson-data/main/geojson/states.geojson')
+              .then(res => res.ok ? res.json() : null)
+              .catch(() => null)
+          ])
+            .then(stateGeoData => {
+              if (stateGeoData && stateGeoData.features) {
+                setStateData(stateGeoData);
+                const statePathStrings = stateGeoData.features
+                  .map(feature => {
+                    try {
+                      if (!feature || !feature.geometry) return null;
+                      const d = pathGenerator(feature);
+                      return d ? { d, id: feature.id, name: feature.properties?.name || feature.properties?.NAME || '' } : null;
+                    } catch (err) {
+                      console.warn('Error generating state path:', err);
+                      return null;
+                    }
+                  })
+                  .filter(Boolean);
+                setStatePaths(statePathStrings);
+              }
+              setIsReady(true);
+            })
+            .catch(() => {
+              // States file doesn't exist, that's okay - map will still work without state boundaries
+              setIsReady(true);
+            });
+        } catch (err) {
+          console.error('Error processing map data:', err);
+          setError('Failed to process map data');
+        }
+      })
+      .catch(err => {
+        console.error('Error loading GeoJSON:', err);
+        setError('Failed to load map data');
+      });
+  }, [d3Geo]);
+
+  if (error) {
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <div className="text-gray-400 text-sm">Map unavailable</div>
+      </div>
+    );
+  }
+
+  if (!d3Geo || !isReady || paths.length === 0) {
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <div className="text-gray-400 text-sm">Loading map...</div>
+      </div>
+    );
+  }
+
+  return (
+    <svg 
+      ref={svgRef}
+      viewBox="0 0 600 500" 
+      className="w-full h-full drop-shadow-[0_0_30px_rgba(72,192,163,0.3)]"
+      preserveAspectRatio="xMidYMid meet"
+    >
+      <defs>
+        <linearGradient id="mapGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#006838" />
+          <stop offset="100%" stopColor="#0B251C" />
+        </linearGradient>
+      </defs>
+      
+      {/* Render Nigeria map paths from GeoJSON */}
+      {paths.map((path, i) => (
+        <motion.path
+          key={path.id || i}
+          d={path.d}
+          fill="url(#mapGradient)"
+          stroke="#48C0A3"
+          strokeWidth="1.5"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: i * 0.1 }}
+        />
+      ))}
+      
+      {/* Render state boundaries if available */}
+      {statePaths.map((path, i) => (
+        <path
+          key={`state-${path.id || i}`}
+          d={path.d}
+          fill="none"
+          stroke="#48C0A3"
+          strokeWidth="0.5"
+          strokeOpacity="0.4"
+          strokeDasharray="2,2"
+        />
+      ))}
+      
+      {/* Animated pulse markers for locations */}
+      {locations.map((loc, i) => {
+        if (!projectionRef.current) return null;
+        try {
+          const coords = projectionRef.current([loc.lon, loc.lat]);
+          if (!coords || coords.length < 2 || !isFinite(coords[0]) || !isFinite(coords[1])) {
+            return null;
+          }
+          return (
+            <g key={i}>
+              <circle cx={coords[0]} cy={coords[1]} r="3" fill="#ffffff">
+                <animate attributeName="opacity" values="1;0.5;1" dur={`${2+i*0.5}s`} repeatCount="indefinite" />
+              </circle>
+              <circle cx={coords[0]} cy={coords[1]} r="10" fill="none" stroke="#ffffff" strokeWidth="0.75" opacity="0.5">
+                <animate attributeName="r" values="3;16" dur="2s" repeatCount="indefinite" />
+                <animate attributeName="opacity" values="0.8;0" dur="2s" repeatCount="indefinite" />
+              </circle>
+            </g>
+          );
+        } catch (err) {
+          return null;
+        }
+      })}
+    </svg>
+  );
+};
+
 const MapSection = () => (
   <section className="py-32 bg-white relative overflow-hidden">
     <div className="absolute inset-0 opacity-20" style={{ backgroundImage: "radial-gradient(#48C0A3 1px, transparent 1px)", backgroundSize: "30px 30px" }}></div>
@@ -785,38 +1105,9 @@ const MapSection = () => (
         </div>
         
         <div className="lg:w-2/3 relative w-full aspect-[4/3] flex items-center justify-center">
-           <svg viewBox="0 0 600 500" className="w-full h-full drop-shadow-[0_0_30px_rgba(72,192,163,0.3)]">
-              {/* Simplified Nigeria Map Shape */}
-              <defs>
-                <linearGradient id="mapGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#006838" />
-                  <stop offset="100%" stopColor="#0B251C" />
-                </linearGradient>
-              </defs>
-              <path 
-                d="M100,200 C100,150 150,80 250,60 L500,50 L550,200 L530,350 L270,420 L80,350 Z" 
-                fill="url(#mapGradient)" 
-                stroke="#48C0A3" 
-                strokeWidth="2"
-                opacity="1"
-              />
-              
-              {/* Animated pulses for locations */}
-              {[
-                {x: 150, y: 300}, {x: 200, y: 200}, {x: 350, y: 150}, 
-                {x: 450, y: 250}, {x: 300, y: 350}, {x: 120, y: 250}, {x: 400, y: 300}, {x: 250, y: 120}
-              ].map((pos, i) => (
-                <g key={i}>
-                  <circle cx={pos.x} cy={pos.y} r="4" fill="#ffffff">
-                    <animate attributeName="opacity" values="1;0.5;1" dur={`${2+i*0.5}s`} repeatCount="indefinite" />
-                  </circle>
-                  <circle cx={pos.x} cy={pos.y} r="15" fill="none" stroke="#ffffff" strokeWidth="1" opacity="0.5">
-                    <animate attributeName="r" values="4;20" dur="2s" repeatCount="indefinite" />
-                    <animate attributeName="opacity" values="0.8;0" dur="2s" repeatCount="indefinite" />
-                  </circle>
-                </g>
-              ))}
-           </svg>
+          <MapErrorBoundary>
+            <NigeriaMap />
+          </MapErrorBoundary>
         </div>
       </div>
     </div>
