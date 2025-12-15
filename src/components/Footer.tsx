@@ -1,4 +1,12 @@
 import React from 'react';
+import {
+  Facebook,
+  Twitter,
+  Linkedin,
+  Instagram,
+  Youtube,
+  AtSign,
+} from 'lucide-react';
 
 const Footer: React.FC = () => (
   <footer className="bg-[#02100d] text-white pt-24 pb-12 border-t border-white/5 relative z-20">
@@ -98,20 +106,21 @@ const Footer: React.FC = () => (
       <div className="pt-12 border-t border-white/5 flex flex-col items-center gap-8">
         <div className="flex gap-6">
           {[
-            'facebook',
-            'twitter',
-            'linkedin',
-            'instagram',
-            'youtube',
-            'tiktok',
-            'at-sign',
-          ].map((icon, i) => (
-            <div
-              key={i}
+            { name: 'Facebook', Icon: Facebook },
+            { name: 'Twitter / X', Icon: Twitter },
+            { name: 'LinkedIn', Icon: Linkedin },
+            { name: 'Instagram', Icon: Instagram },
+            { name: 'YouTube', Icon: Youtube },
+            { name: 'Email', Icon: AtSign },
+          ].map(({ name, Icon }, i) => (
+            <button
+              key={name}
+              type="button"
+              aria-label={name}
               className="text-white hover:text-brand-accent cursor-pointer transition-colors"
             >
-              <div className="w-5 h-5 bg-current rounded-full opacity-80"></div>
-            </div>
+              <Icon className="w-5 h-5" />
+            </button>
           ))}
         </div>
 
