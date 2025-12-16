@@ -29,7 +29,7 @@ const SectionHeading: React.FC<SectionHeadingProps> = ({ sub, title, dark = fals
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay: 0.1 }}
-      className={`text-4xl md:text-5xl font-bold ${
+      className={`text-3xl md:text-4xl font-bold ${
         dark ? 'text-white' : 'text-brand-dark'
       } font-sans`}
     >

@@ -106,12 +106,9 @@ const Footer: React.FC = () => (
       <div className="pt-12 border-t border-white/5 flex flex-col items-center gap-8">
         <div className="flex gap-6">
           {[
-            { name: 'Facebook', Icon: Facebook },
             { name: 'Twitter / X', Icon: Twitter },
             { name: 'LinkedIn', Icon: Linkedin },
-            { name: 'Instagram', Icon: Instagram },
             { name: 'YouTube', Icon: Youtube },
-            { name: 'Email', Icon: AtSign },
           ].map(({ name, Icon }, i) => (
             <button
               key={name}

@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { ArrowRight, Play } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 const Hero: React.FC = () => {
   const { scrollY } = useScroll();
@@ -42,14 +42,15 @@ const Hero: React.FC = () => {
             </span>
           </div>
 
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white leading-[1.05] tracking-tight mb-8 font-sans">
-            Local Currency Blended <br />
+          <h1 className="text-5xl md:text-6xl font-bold text-white leading-[1.05] tracking-tight mb-8 font-sans">
+            Local Currency Blended
+            <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-accent to-brand-primary">
-              Climate Finance
-            </span>
+              Climate Finance for Off-Grid
+            </span> Energy Access in Nigeria.
           </h1>
 
-          <div className="flex flex-col md:flex-row gap-8 md:gap-12 items-start">
+          <div className="flex flex-col gap-8 md:gap-12 items-start">
             <p className="text-lg text-gray-300 leading-relaxed max-w-xl border-l border-white/20 pl-6 font-sans">
               Climate Finance Blending Facility will be the first of its kind to receive certification under
               the Electrical Grids and Storage criteria by the Climate Bonds Standard.
@@ -61,15 +62,19 @@ const Hero: React.FC = () => {
               transition={{ delay: 0.5 }}
               className="flex flex-row gap-4 mt-2"
             >
-              <button className="bg-brand-accent hover:bg-white text-brand-dark px-10 py-4 rounded-full font-bold flex items-center justify-center gap-2 group transition-all duration-300 min-w-[160px] shadow-lg shadow-brand-accent/20 font-sans">
+              {/* <button className="bg-brand-accent hover:bg-white text-brand-dark px-10 py-4 rounded-full font-bold flex items-center justify-center gap-2 group transition-all duration-300 min-w-[160px] shadow-lg shadow-brand-accent/20 font-sans">
                 Learn More
                 <ArrowRight
                   size={18}
                   className="group-hover:translate-x-1 transition-transform"
                 />
-              </button>
-              <button className="px-10 py-4 rounded-full font-bold text-white border border-white/20 hover:bg-white/10 flex items-center justify-center gap-2 backdrop-blur-sm transition-all min-w-[160px] font-sans">
-                <Play size={18} fill="currentColor" /> Watch Video
+              </button> */}
+              <button className="px-10 py-4 rounded-full font-bold text-white border border-white/20 hover:bg-secondary duration-300 flex items-center justify-center gap-2 backdrop-blur-sm transition-all min-w-[160px] font-sans">
+                Learn More
+                <ArrowRight
+                  size={18}
+                  className="group-hover:translate-x-1 transition-transform"
+                />
               </button>
             </motion.div>
           </div>

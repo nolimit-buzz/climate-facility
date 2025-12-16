@@ -224,13 +224,13 @@ const MapSection: React.FC = () => (
             <div className="text-2xl font-medium mb-6 text-brand-dark font-sans">
               States Covered
             </div>
-            <p className="text-gray-600 mb-8 leading-relaxed text-lg font-sans">
+            <p className="text-gray-600 mb-8 leading-relaxed text-md font-sans">
               Collectively, off-grid renewable energy projects located in 35 states across the
               six geo-political zones in Nigeria have been approved for co-financing by the
               Facility.
             </p>
-            <button className="bg-brand-accent text-brand-dark px-8 py-4 rounded-full hover:bg-brand-dark hover:text-white transition-all font-bold flex items-center gap-2 shadow-lg shadow-brand-accent/20 font-sans">
-              View All Locations <ArrowRight size={20} />
+            <button className="text-sm bg-brand-accent text-brand-dark px-8 py-4 rounded-full hover:bg-brand-dark hover:text-white transition-all font-bold flex items-center gap-2 shadow-lg shadow-brand-accent/20 font-sans">
+              View All Locations <ArrowRight size={16} />
             </button>
           </div>
         </div>
