@@ -38,7 +38,7 @@ const FeaturedStories: React.FC = () => {
                   </div>
                 </div>
               </div>
-              <h3 className="font-bold text-xl mb-2 group-hover:text-brand-primary transition-colors font-sans">
+              <h3 className="font-bold text-lg mb-2 group-hover:text-brand-primary transition-colors font-sans">
                 Success Story: Empowering Rural Communities
               </h3>
               <p className="text-gray-500 text-sm font-sans">October 2024</p>

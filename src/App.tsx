@@ -66,7 +66,7 @@ const App: React.FC = () => {
                         </div>
                         <div className="lg:w-2/3">
                             <SectionHeading sub="Our Goal" title="Aiming For Net Zero" dark />
-                            <p className="text-gray-300 text-lg leading-relaxed mb-12 max-w-2xl font-sans">
+                            <p className="text-gray-300 text-md leading-relaxed mb-12 max-w-2xl font-sans">
                                 The Facility will use its impact seeking capital to blend the cost of Eligible
                                 Green Projects aimed at fulfilling two main environmental objectives: climate
                                 change mitigation and energy transition to a low-carbon economy.
@@ -99,18 +99,28 @@ const App: React.FC = () => {
                     </h3>
                     <div className="flex flex-wrap justify-center gap-x-12 gap-y-8 items-center opacity-60 hover:opacity-100 transition-opacity duration-500">
                         {[
-                            'AIICO Insurance',
-                            'Linkage Assurance',
-                            'LEADWAY',
-                            'Pension Custodian',
-                            'United Capital',
-                            'MERISTEM',
+                            { name: 'AIICO Insurance', logo: '/aiico-logo.png' },
+                            { name: 'Linkage Assurance', logo: '/linkage-logo.png' },
+                            { name: 'LEADWAY', logo: 'leadway-logo.webp' },
+                            // { name: 'Pension Custodian', logo: null },
+                            { name: 'United Capital', logo: 'united-capital-logo.png' },
+                            { name: 'MERISTEM', logo: 'meristem-logo.svg' },
                         ].map((brand, i) => (
                             <div
                                 key={i}
-                                className="text-xl font-bold text-white/40 hover:text-white transition-colors cursor-default tracking-wide font-sans"
+                                className="flex items-center justify-center group/logo"
                             >
-                                {brand}
+                                {brand.logo ? (
+                                    <img
+                                        src={brand.logo}
+                                        alt={brand.name}
+                                        className="h-10 w-auto opacity-90 transition-grayscale duration-300 grayscale"
+                                    />
+                                ) : (
+                                    <div className="text-xl font-bold text-white/40 hover:text-white transition-colors cursor-default tracking-wide font-sans">
+                                        {brand.name}
+                                    </div>
+                                )}
                             </div>
                         ))}
                     </div>

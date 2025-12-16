@@ -71,7 +71,7 @@ const LatestNews: React.FC = () => {
                   <Calendar size={14} className="text-brand-accent" />
                   <span>{item.date}</span>
                 </div>
-                <h3 className="text-xl font-bold text-brand-dark mb-4 group-hover:text-brand-primary transition-colors leading-snug font-sans">
+                <h3 className="text-lg font-bold text-brand-dark mb-4 group-hover:text-brand-primary transition-colors leading-snug font-sans">
                   {item.title}
                 </h3>
                 <div className="mt-auto pt-4 flex items-center gap-2 text-brand-accent font-bold text-sm uppercase tracking-wider group-hover:gap-3 transition-all font-sans">
