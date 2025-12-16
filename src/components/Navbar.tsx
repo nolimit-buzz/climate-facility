@@ -32,9 +32,9 @@ const Navbar: React.FC = () => {
         {/* Logo */}
         <a href="#" className="flex items-center group">
           <img
-            src="/logo.svg"
+            src={scrolled ? "/logo-colored.svg" : "/logo.svg"}
             alt="Climate Finance Blending Facility"
-            className="h-12 w-auto transition-opacity group-hover:opacity-90"
+            className="h-12 w-auto transition-all duration-300 group-hover:opacity-90"
           />
         </a>
 
