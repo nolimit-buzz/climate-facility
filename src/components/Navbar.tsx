@@ -34,7 +34,7 @@ const Navbar: React.FC = () => {
           <img
             src={scrolled ? "/logo-colored.svg" : "/logo.svg"}
             alt="Climate Finance Blending Facility"
-            className="h-12 w-auto transition-all duration-300 group-hover:opacity-90"
+            className={!scrolled ? "h-12 w-auto transition-all duration-300 group-hover:opacity-90" : "h-10 w-auto transition-all duration-300 group-hover:opacity-90"}
           />
         </a>
 

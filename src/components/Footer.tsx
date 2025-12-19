@@ -15,7 +15,7 @@ const Footer: React.FC = () => (
         <div className="flex flex-col items-center lg:items-start lg:col-span-1">
           <a href="#" className="flex items-center mb-8">
             <img
-              src="/logo-colored.svg"
+              src="/logo.svg"
               alt="Climate Finance Blending Facility"
               className="h-12 w-auto"
             />

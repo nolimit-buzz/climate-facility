@@ -14,13 +14,14 @@ import FeaturedStories from './components/FeaturedStories';
 import LatestNews from './components/LatestNews';
 import Footer from './components/Footer';
 import SectionHeading from './components/SectionHeading';
-
+import OurImpact from './components/OurImpact';
 const App: React.FC = () => {
     return (
         <div className="font-sans antialiased text-brand-dark bg-white selection:bg-brand-primary selection:text-white overflow-x-hidden">
             <Navbar />
             <Hero />
             <AboutSection />
+            <OurImpact />
             {/* Other sections (impact, etc.) remain in index.tsx for now or can be further split */}
             {/* You can later move HowWeDriveImpact into its own component as well */}
             <Projects />
