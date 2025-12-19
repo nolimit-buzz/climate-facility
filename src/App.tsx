@@ -44,7 +44,7 @@ const App: React.FC = () => {
 
                 <div className="pt-32 pb-20 container mx-auto relative z-10">
                     <div className="flex flex-col lg:flex-row items-center gap-20">
-                        <div className="lg:w-1/3">
+                        <div className="lg:w-1/4">
                             <div className="bg-gradient-to-br from-[#0f3d32] to-[#051F1A] p-1 rounded-2xl rotate-3 shadow-2xl">
 
                                 <div className="bg-brand-dark rounded-xl overflow-hidden p-8 aspect-[3/4] flex flex-col justify-between border border-white/10 backdrop-blur-sm">

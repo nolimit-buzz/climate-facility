@@ -22,7 +22,7 @@ const Hero: React.FC = () => {
           poster="https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=2070&auto=format&fit=crop"
         >
           <source
-            src="https://videos.pexels.com/video-files/855074/855074-hd_1920_1080_25fps.mp4"
+            src="/hero-vid.mp4"
             type="video/mp4"
           />
         </video>
