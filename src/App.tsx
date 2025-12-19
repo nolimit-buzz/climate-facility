@@ -115,7 +115,7 @@ const App: React.FC = () => {
                                     <img
                                         src={brand.logo}
                                         alt={brand.name}
-                                        className="h-10 w-auto opacity-90 transition-grayscale duration-300 grayscale"
+                                        className="h-8 w-auto opacity-90 transition-all duration-300 grayscale group-hover:opacity-100 group-hover:grayscale-0"
                                     />
                                 ) : (
                                     <div className="text-xl font-bold text-white/40 hover:text-white transition-colors cursor-default tracking-wide font-sans">
